@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FC Barcelona - Ultimate Interactive Gallery</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body onload="initializeApp()">
+    <div id="toast-container"></div>
+
+    <header class="main-header">
+      <div class="logo-area">
+        <i class="fa-solid fa-shield-halved barca-icon"></i>
+        <h1>FC Barcelona <span>Master Gallery</span></h1>
+      </div>
+      <div class="header-controls">
+        <button
+          id="theme-toggle"
+          class="control-btn"
+          title="Chuyển đổi giao diện Sáng/Tối"
+        >
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button
+          id="sound-toggle"
+          class="control-btn"
+          title="Bật/Tắt âm thanh tương tác"
+        >
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="toolbar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Tìm kiếm hình ảnh, cầu thủ, danh hiệu..."
+            oninput="filterGallery()"
+          />
+          <button id="clearSearch" onclick="resetSearch()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="filter-buttons">
+          <button
+            class="filter-btn active"
+            data-filter="all"
+            onclick="filterCategory('all')"
+          >
+            Tất cả
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="action"
+            onclick="filterCategory('action')"
+          >
+            Trận đấu
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="team"
+            onclick="filterCategory('team')"
+          >
+            Đội hình
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="legends"
+            onclick="filterCategory('legends')"
+          >
+            Huyền thoại
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="trophies"
+            onclick="filterCategory('trophies')"
+          >
+            Danh hiệu
+          </button>
+        </div>
+
+        <div class="view-modes">
+          <button
+            class="mode-btn active"
+            onclick="setViewMode('grid')"
+            title="Lưới tiêu chuẩn"
+          >
+            <i class="fa-solid fa-table-cells"></i>
+          </button>
+          <button
+            class="mode-btn"
+            onclick="setViewMode('compact')"
+            title="Lưới thu gọn"
+          >
+            <i class="fa-solid fa-grip"></i>
+          </button>
+          <button
+            class="mode-btn"
+            onclick="startSlideshow()"
+            title="Chạy Slideshow tự động"
+          >
+            <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
+      </section>
+
+      <section id="image" class="hero-viewer">
+        <div class="hero-content">
+          <span class="badge"
+            ><i class="fa-solid fa-star"></i> Màn hình trưng bày chính</span
+          >
+          <p class="hero-title">
+            Rà chuột hoặc nhấn phím Tab vào ảnh bên dưới để khám phá chi tiết
+          </p>
+          <div class="hero-actions">
+            <button
+              class="action-btn"
+              id="expandBtn"
+              onclick="openLightboxFromHero()"
+            >
+              <i class="fa-solid fa-expand"></i> Phóng to
+            </button>
+            <button
+              class="action-btn"
+              id="favoriteBtn"
+              onclick="toggleFavoriteCurrent()"
+            >
+              <i class="fa-regular fa-heart"></i> Thích
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="gallery" id="galleryGrid">
+        <div
+          class="preview"
+          data-category="action"
+          data-title="FC Barcelona Action 1 - Trận cầu đỉnh cao tại Camp Nou"
+        >
+          <div class="card-inner">
+            <img
+              src="logo.jpg"
+              alt="FC Barcelona Action 1"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Trận đấu</span>
+              <h3>Camp Nou Atmosphere</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="preview"
+          data-category="action"
+          data-title="FC Barcelona Action 2 - Khoảnh khắc ăn mừng bàn thắng"
+        >
+          <div class="card-inner">
+            <img
+              src="barcelona.jpg"
+              alt="FC Barcelona Action 2"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Trận đấu</span>
+              <h3>Goal Celebration</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="preview"
+          data-category="legends"
+          data-title="FC Barcelona Action 3 - Huyền thoại sân cỏ Blaugrana"
+        >
+          <div class="card-inner">
+            <img
+              src="Barcelona.webp"
+              alt="FC Barcelona Action 3"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Huyền thoại</span>
+              <h3>Blaugrana Legend</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="preview"
+          data-category="team"
+          data-title="FC Barcelona Action 4 - Đội hình ra quân mùa giải mới"
+        >
+          <div class="card-inner">
+            <img
+              src="Barcedona1.jpg"
+              alt="FC Barcelona Action 4"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Đội hình</span>
+              <h3>Starting Lineup</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="preview"
+          data-category="team"
+          data-title="FC Barcelona Team 1 - Tập thể đoàn kết và quyết tâm"
+        >
+          <div class="card-inner">
+            <img
+              src="barcedona.png"
+              alt="FC Barcelona Team 1"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Đội hình</span>
+              <h3>Team Unity</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="preview"
+          data-category="trophies"
+          data-title="FC Barcelona Team 2 - Vinh quang cúp bạc châu Âu"
+        >
+          <div class="card-inner">
+            <img
+              src="barcelona.png"
+              alt="FC Barcelona Team 2"
+              onmouseover="upDate(this)"
+              onmouseleave="unDo()"
+              onfocus="upDate(this)"
+              onblur="unDo()"
+              onclick="openLightbox(this)"
+            />
+            <div class="card-overlay">
+              <span class="tag">Danh hiệu</span>
+              <h3>European Glory</h3>
+              <div class="card-footer-info">
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    toggleLike(this);
+                  "
+                  class="like-icon"
+                >
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <button
+                  onclick="
+                    event.stopPropagation();
+                    openLightbox(this);
+                  "
+                  class="zoom-icon"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="lightboxModal" class="lightbox">
+      <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+      <button class="lightbox-nav prev-btn" onclick="changeLightboxImage(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <div class="lightbox-content-wrapper">
+        <img id="lightboxImg" src="" alt="Expanded View" />
+        <div id="lightboxCaption"></div>
+      </div>
+      <button class="lightbox-nav next-btn" onclick="changeLightboxImage(1)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <footer class="main-footer">
+      <p>
+        &copy; 2026 FC Barcelona Interactive Gallery. Designed with
+        <i class="fa-solid fa-heart" style="color: #edbb00"></i> for Blaugrana
+        Fans.
+      </p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
